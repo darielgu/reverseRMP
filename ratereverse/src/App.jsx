@@ -2,19 +2,33 @@ import { useState } from 'react'
 import './App.css'
 
 function App() {
-  const [department, setDepartment] = useState('')
+  const [department, setDepartment] = useState('') // using react useState for user input
   const [courseID, setID] = useState('')
-  const handleSubmit = (e) => {
+  const [results, setResults] = useState([])
+
+
+  const handleSubmit = async (e) => { // handling user clicking enter button
   e.preventDefault()
-  const query = `${department} ${courseID}`
-  alert(`searching for: ${query}`)
+  const prof = await fetchProfessor();
+  setResults(prof)
   }
 
-  const fetchProfessor = async () => {
-    
+  const fetchProfessor = async (e) => { // this is where we will be making our api call 
+    const mockData = [
+      { name: "Dr. Smith", rating: 4.7 },
+      { name: "Prof. Lee", rating: 4.3 },
+      { name: "Dr. Johnson", rating: 3.9 },
+    ];
+
+    //simulating a network delay
+    return new Promise((resolve)=>{
+      setTimeout(()=>{
+        resolve(mockData)
+      },1000)
+    })
   }
   return (
-    <div id ='root'>
+    <div id =''>
       <div style = {{padding : '2rem'}}></div>
       <h1>Reverse Rate My Professor SDSU</h1>
       <form onSubmit={handleSubmit}>
@@ -35,6 +49,18 @@ function App() {
         <br/>
         <button type='submit'>Search</button>
       </form>
+     
+        <h2>Results</h2>
+        <ul>
+          {results.map((prof,index) =>(
+            <li key={index}>
+              {prof.name} -- {prof.rating}
+            </li>
+            
+          ))}
+        </ul>
+
+ 
     </div>
   )
 }
